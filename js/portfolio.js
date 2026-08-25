@@ -95,29 +95,148 @@
     });
   }
 
-  // Project filters
+  // Project filters + Load More
+  const INITIAL_VISIBLE = 6;
+  const LOAD_MORE_COUNT = 3;
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const projectCols = document.querySelectorAll('#projects-grid > div');
+  const projectCols = Array.from(document.querySelectorAll('#projects-grid > div'));
+  const loadMoreBtn = document.getElementById('load-more-projects');
+
+  let currentFilter = 'all';
+  let visibleCount = INITIAL_VISIBLE;
+
+  function getMatchingCols() {
+    return projectCols.filter(function (col) {
+      const card = col.querySelector('.project-card');
+      if (!card) return false;
+      const category = card.getAttribute('data-category');
+      return currentFilter === 'all' || category === currentFilter;
+    });
+  }
+
+  function renderProjects() {
+    const matching = getMatchingCols();
+    const grid = document.getElementById('projects-grid');
+
+    projectCols.forEach(function (col) {
+      col.style.display = 'none';
+    });
+
+    matching.forEach(function (col, index) {
+      if (index < visibleCount) {
+        col.style.display = '';
+      }
+    });
+
+    if (loadMoreBtn) {
+      loadMoreBtn.classList.toggle('is-hidden', matching.length <= visibleCount);
+    }
+
+    if (grid) {
+      grid.classList.add('is-ready');
+    }
+  }
 
   filterBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       filterBtns.forEach(function (b) { b.classList.remove('active'); });
       this.classList.add('active');
-
-      const filter = this.getAttribute('data-filter');
-
-      projectCols.forEach(function (col) {
-        const card = col.querySelector('.project-card');
-        if (!card) return;
-        const category = card.getAttribute('data-category');
-        if (filter === 'all' || category === filter) {
-          col.style.display = '';
-        } else {
-          col.style.display = 'none';
-        }
-      });
+      currentFilter = this.getAttribute('data-filter');
+      visibleCount = INITIAL_VISIBLE;
+      renderProjects();
     });
   });
+
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', function () {
+      visibleCount += LOAD_MORE_COUNT;
+      renderProjects();
+    });
+  }
+
+  renderProjects();
+
+  // Complete project archive from CSV
+  (function initProjectArchive() {
+    const tbody = document.getElementById('archive-tbody');
+    const countEl = document.getElementById('archive-count');
+    const searchEl = document.getElementById('archive-search');
+    if (!tbody) return;
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function normalizeUrl(raw) {
+      const value = (raw || '').trim();
+      if (!value) return '';
+      if (/^https?:\/\//i.test(value)) return value;
+      return 'https://' + value.replace(/^\/\//, '');
+    }
+
+    function displayHost(url) {
+      try {
+        const parsed = new URL(url);
+        const host = parsed.hostname.replace(/^www\./, '');
+        const path = parsed.pathname.replace(/\/$/, '');
+        if (path) return host + path;
+        return host;
+      } catch (e) {
+        return url.replace(/^https?:\/\//i, '').replace(/\/$/, '');
+      }
+    }
+
+    function renderRows(projects, query) {
+      const term = (query || '').trim().toLowerCase();
+      const filtered = projects.filter(function (project) {
+        if (!term) return true;
+        return (
+          displayHost(project.url).toLowerCase().indexOf(term) !== -1 ||
+          project.theme.toLowerCase().indexOf(term) !== -1
+        );
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="3">No matching projects found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(function (project, index) {
+        const host = escapeHtml(displayHost(project.url));
+        return (
+          '<tr>' +
+            '<td>' + (index + 1) + '</td>' +
+            '<td><a href="' + escapeHtml(project.url) + '" target="_blank" rel="noopener noreferrer">' + host + '</a></td>' +
+            '<td>' + escapeHtml(project.theme) + '</td>' +
+          '</tr>'
+        );
+      }).join('');
+    }
+
+    const projects = (window.PROJECT_ARCHIVE || []).map(function (project) {
+      return {
+        url: normalizeUrl(project.url),
+        theme: project.theme || '-'
+      };
+    });
+
+    if (!projects.length) {
+      tbody.innerHTML = '<tr><td colspan="3">Project list could not be loaded. <a href="Project-list.csv" download>Download CSV</a></td></tr>';
+      return;
+    }
+
+    if (countEl) countEl.textContent = String(projects.length);
+    renderRows(projects);
+    if (searchEl) {
+      searchEl.addEventListener('input', function () {
+        renderRows(projects, searchEl.value);
+      });
+    }
+  })();
 
   // Scroll to top button
   const scrollTopBtn = document.getElementById('scroll-top');

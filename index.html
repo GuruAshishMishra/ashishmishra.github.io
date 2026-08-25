@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="col-lg-5 hero-image-wrap ftco-animate">
-          <img src="images/about-me.png" alt="Ashish Mishra - WordPress Developer">
+          <img src="images/profile-new.png" alt="Ashish Mishra - WordPress Developer">
         </div>
       </div>
     </div>
@@ -87,7 +87,7 @@
         <div class="col-lg-4 ftco-animate">
           <div class="about-card">
             <div class="about-img-wrap">
-              <img src="images/about-me.png" alt="Ashish Mishra">
+              <img src="images/profile-new.png" alt="Ashish Mishra">
             </div>
             <ul class="about-info-list">
               <li><span class="label">Name</span><span class="value">Ashish Mishra</span></li>
@@ -304,17 +304,57 @@
       <div class="section-title-wrap ftco-animate">
         <span class="section-label">Portfolio</span>
         <h2 class="section-title">Notable Projects</h2>
-        <p class="section-subtitle">A selection of WordPress projects across business, news, and education sectors.</p>
+        <p class="section-subtitle">Featured WordPress work across WooCommerce, business, news, and education. <a href="#all-projects" class="inline-archive-link">View complete project list</a></p>
       </div>
 
       <div class="project-filters ftco-animate">
         <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="woocommerce">WooCommerce</button>
         <button class="filter-btn" data-filter="business">Business</button>
         <button class="filter-btn" data-filter="news">News</button>
         <button class="filter-btn" data-filter="education">Education</button>
       </div>
 
       <div class="row" id="projects-grid">
+        <div class="col-md-6 col-lg-4 mb-4 ftco-animate">
+          <div class="project-card" data-category="woocommerce">
+            <div class="project-thumb zoom-effect" style="background-image: url('images/mifitness.png');">
+              <a href="https://mifitness.co.za/" target="_blank" class="project-link-icon"><span class="icon-globe"></span></a>
+            </div>
+            <div class="project-body">
+              <span class="project-category">WooCommerce</span>
+              <h3><a href="https://mifitness.co.za/" target="_blank">MiFitness</a></h3>
+              <p>WooCommerce store for premium home and commercial gym equipment with product catalogs, cart, and custom checkout flows.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4 ftco-animate">
+          <div class="project-card" data-category="woocommerce">
+            <div class="project-thumb zoom-effect" style="background-image: url('images/mifitness-kids.png');">
+              <a href="https://www.mifitness-kids.co.za/" target="_blank" class="project-link-icon"><span class="icon-globe"></span></a>
+            </div>
+            <div class="project-body">
+              <span class="project-category">WooCommerce</span>
+              <h3><a href="https://www.mifitness-kids.co.za/" target="_blank">MiFitness Kids</a></h3>
+              <p>WooCommerce website for kids play venues, parties, and trampoline parks with custom branding and venue pages.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4 ftco-animate">
+          <div class="project-card" data-category="woocommerce">
+            <div class="project-thumb zoom-effect" style="background-image: url('images/abyx.png');">
+              <a href="https://abyx.co.za/" target="_blank" class="project-link-icon"><span class="icon-globe"></span></a>
+            </div>
+            <div class="project-body">
+              <span class="project-category">WooCommerce</span>
+              <h3><a href="https://abyx.co.za/" target="_blank">ABYX Chemical</a></h3>
+              <p>WooCommerce store for industrial and consumer cleaning products with online shop, product catalog, and custom Divi setup.</p>
+            </div>
+          </div>
+        </div>
+
         <div class="col-md-6 col-lg-4 mb-4 ftco-animate">
           <div class="project-card" data-category="business">
             <div class="project-thumb zoom-effect" style="background-image: url('images/27-7security.png');">
@@ -445,6 +485,39 @@
           </div>
         </div>
       </div>
+
+      <div class="projects-load-more">
+        <button type="button" id="load-more-projects" class="btn-load-more">Load More</button>
+      </div>
+
+      <div class="project-archive ftco-animate" id="all-projects">
+        <div class="project-archive-head">
+          <div>
+            <span class="section-label">Full Archive</span>
+            <h3>Complete Project List</h3>
+            <p>Every client website I have delivered so far — <span id="archive-count">0</span> projects with live links.</p>
+          </div>
+          <a href="Project-list.csv" download class="btn-archive-download">Download CSV</a>
+        </div>
+        <div class="archive-search-wrap">
+          <label for="archive-search" class="sr-only">Search projects</label>
+          <input type="search" id="archive-search" placeholder="Search by website or theme...">
+        </div>
+        <div class="archive-table-wrap">
+          <table class="archive-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Website</th>
+                <th>Theme</th>
+              </tr>
+            </thead>
+            <tbody id="archive-tbody">
+              <tr><td colspan="3">Loading project list...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -526,6 +599,7 @@
   <script src="js/jquery.animateNumber.min.js"></script>
   <script src="js/scrollax.min.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/project-list.js"></script>
   <script src="js/portfolio.js"></script>
 </body>
 </html>

@@ -1286,3 +1286,10 @@ body {
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+@media (max-width:676px) {
+    .hero-buttons a {
+        width: 100%;
+        text-align: center;
+    }
+}
